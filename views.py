@@ -7,22 +7,33 @@ from . import blueprint
 
 from framework import app, path_data, check_api, py_urllib, SystemModelSetting, login_required
 
-exclude_names=['mount', 'mnt', 'mnt_cache', '__pycache__', '.git']
+
 excluded_extensions=['mp4', 'db', 'pyo']
+
+
+def get_exclude_names():
+    exclude_names=['mnt', '__pycache__', '.git', 'false']
+    allow = ['custom', 'db', 'html', 'module']
+    from framework import path_data
+    for item in os.listdir(path_data):
+        if item not in allow:
+            exclude_names.append(item)
+    return exclude_names
 
 
 @blueprint.route('/')
 @login_required
 def index():
+    exclude_names=['mount', 'mnt', 'mnt_cache', '__pycache__', '.git']
     dirname = os.path.basename(g.flaskcode_resource_basepath)
-    dtree = dir_tree(g.flaskcode_resource_basepath, g.flaskcode_resource_basepath + '/', exclude_names=exclude_names, excluded_extensions=excluded_extensions, )
+    dtree = dir_tree(g.flaskcode_resource_basepath, g.flaskcode_resource_basepath + '/', exclude_names=get_exclude_names(), excluded_extensions=excluded_extensions, )
     return render_template('flaskcode/index.html', dirname=dirname, dtree=dtree, file_loading="")
 
 @blueprint.route('/<path:path>')
 @login_required
 def index2(path):
     dirname = os.path.basename(g.flaskcode_resource_basepath)
-    dtree = dir_tree(g.flaskcode_resource_basepath, g.flaskcode_resource_basepath + '/', exclude_names=exclude_names, excluded_extensions=excluded_extensions, )
+    dtree = dir_tree(g.flaskcode_resource_basepath, g.flaskcode_resource_basepath + '/', exclude_names=get_exclude_names(), excluded_extensions=excluded_extensions, )
     file_path = os.path.join(g.flaskcode_resource_basepath, path)
     if os.path.isfile(file_path):
         file_loading = path
