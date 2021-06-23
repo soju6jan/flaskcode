@@ -7,7 +7,7 @@ from . import blueprint
 
 from framework import app, path_data, check_api, py_urllib, SystemModelSetting, login_required
 
-exclude_names=['mount', 'mnt', '__pycache__']
+exclude_names=['mount', 'mnt', '__pycache__', '.git']
 excluded_extensions=['mp4', 'db', 'pyo']
 
 
